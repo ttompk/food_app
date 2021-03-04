@@ -1,0 +1,356 @@
+### Kivy display architecture for FoodApp
+
+# lowercase file name that matches the name of the 'Myapp' class but can't use 'app'
+
+WindowManager:
+    MainWindow:
+    DaysWindow: 
+    FoodWindow: 
+    SettingsWindow:
+
+<Button>
+    font_size: 40
+
+<MainWindow>:
+    name: "main"
+    var_btn_expires: btn_expires
+    var_btn_opened: btn_opened
+    var_btn_today: btn_today
+    var_btn_settings: btn_settings
+
+    GridLayout:
+        cols: 1
+        #size: root.width - 20, root.height - 20
+        #pos: 10, 10
+        
+        Label:
+            text: "Food Expiration App"
+            font_size: 30
+            size_hint_y: None
+            height: 45
+            color: 0.1,0.1,0.1,1
+        Label:
+            text: "Decreasing food waste through labeling."
+            font_size: 12
+            #size: self.texture_size
+            size_hint_y: None
+            height: 20
+            valign: 'top'
+            color: 0.1,0.1,0.1,1
+        
+        #GridLayout:
+        #    cols: 1
+
+        Button:
+            id: btn_expires
+            text: "Expires"
+            background_color: 0.1, 0.5, 0.6, 0.75
+            # root refers to method within MainWindow class, passes instance in
+            on_press: 
+                #root.expire_btn()
+                root.user_input(btn_expires)
+            on_release: 
+                app.root.current = "days"
+                root.manager.transition.direction = "left"
+            
+        Button:
+            id: btn_opened
+            text: "Opened"
+            background_color: 0.1, 0.5, 0.6, 0.75
+            # root refers to method within MainWindow class, passes instance in
+            on_press: 
+                #root.open_btn()
+                root.user_input(btn_opened)
+            on_release: 
+                root.show_popup()
+                #app.root.current = "main"
+                #root.manager.transition.direction = "left"
+            
+        Button:
+            id: btn_today
+            text: "Print Today's Date"
+            background_color: 0.1, 0.5, 0.6, 0.75
+            on_press:
+                #root.today_btn()
+                root.user_input(btn_today)
+            on_release: 
+                root.show_popup()
+
+        Button:
+            id: btn_settings
+            text: "Settings"
+            font_size: 35
+            size_hint_y: None
+            height: 50
+            valign: 'bottom'
+            on_press:
+                #root.today_btn()
+                root.user_input(btn_settings)
+            on_release:
+                app.root.current = "settings"
+                root.manager.transition.direction = "left"
+
+        #Button:
+        #    text: "Submit"
+        #    on_release: 
+        #        app.root.current = "second" if passw.text == "tim" else "main"
+        #        root.manager.transition.direction = "left"
+
+<DaysWindow>:
+    name: "days"
+
+    GridLayout:
+        cols: 1
+        #size: root.width - 10, root.height - 10
+        #pos: 10, 10
+        
+        Label:
+            text: "Number of Days Until Expiry"
+            size_hint_y: None
+            height: 30
+            color: 0.1,0.1,0.1,1
+        
+        GridLayout:
+            cols: 2
+            id:grid
+
+            Button:
+                #id: btn_1_days
+                text: "1"
+                on_press: root.btn_days("1")
+                on_release: 
+                    app.root.current = "food_type"
+                    root.manager.transition.direction = "left"
+            
+            Button:
+                #id: btn_2_days
+                text: "2"
+                on_press: root.btn_days("2")
+                on_release: 
+                    app.root.current = "food_type"
+                    root.manager.transition.direction = "left"
+            Button:
+                #id: btn_3_days
+                text: "3"
+                on_press: root.btn_days("3")
+                on_release: 
+                    app.root.current = "food_type"
+                    root.manager.transition.direction = "left"
+            Button:
+                #id: btn_4_days
+                text: "4"
+                on_press: root.btn_days("4")
+                on_release: 
+                    app.root.current = "food_type"
+                    root.manager.transition.direction = "left"
+            Button:
+                #id: btn_5_days
+                text: "5"
+                on_press: root.btn_days("5")
+                on_release: 
+                    app.root.current = "food_type"
+                    root.manager.transition.direction = "left"
+            Button:
+                #id: btn_6_days
+                text: "6"
+                on_press: root.btn_days("6")
+                on_release: 
+                    app.root.current = "food_type"
+                    root.manager.transition.direction = "left"
+            Button:
+                #id: btn_7_days
+                text: "7"
+                on_press: root.btn_days("7")
+                on_release: 
+                    app.root.current = "food_type"
+                    root.manager.transition.direction = "left"
+            Button:
+                #id: btn_8_days
+                text: "8"
+                on_press: root.btn_days("8")
+                on_release: 
+                    app.root.current = "food_type"
+                    root.manager.transition.direction = "left"
+        Button:
+            text: "Go Back"
+            size_hint_y: None
+            height: 50
+            #on_press: root.main_go_back()
+            on_release: 
+                app.root.current = "main"
+                root.manager.transition.direction = "right"
+
+
+<FoodWindow>:
+    name: "food_type"
+    var_btn_meat: btn_meat
+    var_btn_vegie: btn_vegie
+    var_btn_dairy: btn_dairy
+
+    GridLayout:
+        cols: 1
+        #size: root.width - 20, root.height - 20
+        #pos: 10, 10
+        
+        Label:
+            text: "Food Type"
+            size_hint_y: None
+            height: 30
+            color: 0.1,0.1,0.1,1
+        
+        GridLayout:
+            cols: 1
+            Button:
+                id: btn_vegie
+                text: "Veggie"
+                on_press: 
+                    root.food_val_func(btn_vegie)
+                on_release: 
+                    root.show_popup()
+                    app.root.current = "main"
+                    root.manager.transition.direction = "left"
+            Button:
+                id: btn_meat
+                text: "Meat"
+                on_press: root.food_val_func(btn_meat)
+                on_release: 
+                    root.show_popup()
+                    app.root.current = "main"
+                    root.manager.transition.direction = "left"
+            Button:
+                id: btn_dairy
+                text: "Dairy"
+                on_press: root.food_val_func(btn_dairy)
+                on_release: 
+                    root.show_popup()
+                    app.root.current = "main"
+                    root.manager.transition.direction = "left"
+        Button:
+            text: "Go Back"
+            size_hint_y: None
+            height: 50
+            #on_press: root.expire_btn()
+            on_release: 
+                app.root.current = "days"
+                root.manager.transition.direction = "right"
+
+
+<SettingsWindow>:
+    name: "settings"
+    var_btn_wifi: btn_wifi
+    var_btn_wifi_info: btn_wifi_info 
+    var_btn_sleep: btn_sleep 
+    var_btn_volume: btn_volume 
+
+    GridLayout:
+        cols: 1
+        #size: root.width - 20, root.height - 20
+        #pos: 10, 10
+
+        Label:
+            text: "Settings"
+            font_size: 40
+            size_hint_y: None
+            height: 50
+            color: 0.1,0.1,0.1,1
+
+        GridLayout:
+            cols: 1
+            Button:
+                # this button turns the wifi on or off (radio button)
+                id: btn_wifi
+                text: "Wifi On/Off"
+                font_size: 30
+                # left justify requires the following three lines: 
+                # text_size, valign, halign
+                text_size: self.size
+                valign: 'middle'
+                halign: 'left'
+                size_hint_y: None
+                height: 80
+                on_press:
+                    root.wifi_val_func(btn_wifi)
+                on_release:
+                    # enter call to wifi functions
+                    app.root.current = "main"
+                    root.manager.transition.direction = "left"
+
+            Button:
+                # this button opens a popup form to enter wifi details
+                id: btn_wifi_info
+                text: "Update Wifi Settings"
+                font_size: 30
+                text_size: self.size
+                valign: 'middle'
+                halign: 'left'
+                size_hint_y: None
+                height: 80
+                on_press:
+                    root.sleep_val_func(btn_sleep)
+                on_release:
+                    root.show_popup_wifi()
+                    app.root.current = "main"
+                    root.manager.transition.direction = "left"
+
+            Button:
+                # this button opens a pop up to select how long the 
+                # screens stays on before sleeping
+                id: btn_sleep 
+                text: "Sleep Settings"
+                font_size: 30
+                text_size: self.size
+                valign: 'middle'
+                halign: 'left'
+                size_hint_y: None
+                height: 80
+                on_press: 
+                    root.sleep_val_func(btn_sleep)
+                on_release:
+                    app.root.current = "main"
+                    root.manager.transition.direction = "left"
+
+            Button:
+                # button opens a popup with volume slider.
+                id: btn_volume
+                text: "Set Volume"
+                font_size: 30
+                text_size: self.size
+                valign: 'middle'
+                halign: 'left'
+                size_hint_y: None
+                height: 80
+                on_press:
+                    root.volume_val_func(btn_volume)
+                on_release:
+                    # root.show_popup()
+                    app.root.current = "main"
+                    root.manager.transition.direction = "left"
+
+        Button:
+            text: "Go Back"
+            size_hint_y: None
+            height: 50
+            #on_press: root.expire_btn()
+            on_release:
+                app.root.current = "main"
+                root.manager.transition.direction = "right"
+
+<P>:
+    Label:
+        text: "Pop up will close automatically."
+        text_size: self.width - 20, self.height
+        size_hint: 1, 0.5
+        pos_hint: {"x":0, "top":1}
+        #height: self.texture_size[1]
+
+<PopupWifi>:
+    Label: 
+        text: "Enter Wifi Details"
+        text_size: self.width - 20, self.height
+        size_hint: 1, 0.5
+        pos_hint: {"x":0, "top":1}
+        # input wifi ssid/name
+        # input password
+        # button to update info
+        # close popup window then open new popup with 'connecting' status report
+

@@ -1,0 +1,10 @@
+# dependencies for raspberry pi 
+
+# printing: https://www.raspberrypi.org/blog/printing-at-home-from-your-raspberry-pi/
+sudo apt-get install cups
+sudo usermod -a -G lpadmin pi
+
+sudo apt-get install cups-ipp-utils
+sudo apt-get install system-config-printer
+sudo apt-get install printer-driver-cups-pdf
+

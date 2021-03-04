@@ -1,0 +1,31 @@
+# lowercase file name that matches the name of the 'Myapp' class but can't use 'app'
+
+<Mygrid>
+    
+    var_name: name
+    var_email: email
+
+    GridLayout:
+        # sizing of main grid
+        cols: 1
+        size: root.width - 200, root.height - 200
+        pos: 100, 100
+
+        GridLayout:
+            cols: 2
+            Label:
+                text: "Name: "
+            TextInput:
+                id: name
+                multiline: False
+
+            Label:
+                text: "Email: "
+            TextInput:
+                id: email
+                multiline: False
+        
+        Button:
+            text: "Submit"
+            # root refers to method within MyGrid class, passes instance in
+            on_press: root.btn()

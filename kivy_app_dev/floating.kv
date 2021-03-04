@@ -1,0 +1,22 @@
+# parent tag - applies to all elements with float layout
+# coordinate system starts at bottom left
+#<Button>
+    # size_hint - 30% of left, 50% of top
+    #size_hint: 0.3, 0.5
+    
+    #font_size: 40
+    
+    # r, g, b, alpha (1 = full)
+    #color:0.3, 0.6, 0.7, 1
+
+<FloatLayout>
+    Button:
+        # {"x":ratio value, "y", "top", "bottom", "left", "right"}
+        # "top" references top of button
+        pos_hint: {"x":0.5, "top":1}
+        text: "Mt"
+    
+    Button:
+        text: "Wind" if btn.state == "normal" else "Down"
+        font_size: 50
+        
