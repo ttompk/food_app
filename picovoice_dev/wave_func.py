@@ -6,7 +6,7 @@ import pyaudio
 import wave
 import sys
 
-def AudioFile(resource_type, file, chunk = 1024):
+def AudioFile(resource_type, file_name, chunk = 1024):
     '''
     Play or record a wav file.  
     input:  
@@ -19,7 +19,7 @@ def AudioFile(resource_type, file, chunk = 1024):
     ''' 
     try:
         resource_type = str(resource_type)
-        file = str(file)
+        file_name = str(file_name)
     except TypeError:
         print("Inputs are not the correct type.")
 
@@ -27,25 +27,20 @@ def AudioFile(resource_type, file, chunk = 1024):
     if not isinstance(chunk, int):
         print("Please enter an integer for 'chunk'.")
         sys.exit()
-
-    # open wave file
-    try:
-        wf = wave.open(file, 'rb')
-    except FileNotFoundError:
-        print("File was not found.")
-        sys.exit()
     
-    # perform either play or record then shutdown
-    p = pyaudio.PyAudio()          # create pyaudio object
+    # create pyaudio object
+    p = pyaudio.PyAudio()          
+
+    # perform either play or record then shutdown 
     if resource_type == 'play':
-        _play(p, wf, chunk)
+        stream = _play(p, file_name, chunk)
     else:
-        record(p, stream, chunk)
+        stream = record(p, file_name, chunk)
     # shutdown
     close(p, stream)
 
 
-def _play(p, wf, chunk):
+def _play(p, file_name, chunk):
     ''' create playback pyaudio object
     input: 
         p:   pyaudio object. 
@@ -54,6 +49,13 @@ def _play(p, wf, chunk):
     output:  plays wave file
     return:  nothing
     '''
+    # open wave file
+    try:
+        wf = wave.open(file, 'rb')
+    except FileNotFoundError:
+        print("File was not found.")
+        sys.exit()
+    
     # derives params from wav file itself
     stream = p.open(
                     rate = wf.getframerate(),
@@ -62,13 +64,16 @@ def _play(p, wf, chunk):
                     output = True)
     
     """ Play entire file """
-    data = wf.readframes(chunk)
-    while data != '':
-        stream.write(data)
-        data = wf.readframes(chunk)
+    #data = wf.readframes(chunk)
+    #while data != '':
+    #    stream.write(data)
+    #    data = wf.readframes(chunk)
 
+    #wf = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
+    
+    return stream
 
-def _record(p, stream, chunk):
+def _record(p, file_name, chunk):
     ''' create record pyaudio object'''
     # constants. Update as needed to match picovoice
     RESPEAKER_RATE = 16000
@@ -93,6 +98,15 @@ def _record(p, stream, chunk):
         frames.append(data)
 
     print("* done recording")
+
+    wf = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
+    wf.setnchannels(RESPEAKER_CHANNELS)
+    wf.setsampwidth(p.get_sample_size(p.get_format_from_width(RESPEAKER_WIDTH)))
+    wf.setframerate(RESPEAKER_RATE)
+    wf.writeframes(b''.join(frames))
+    wf.close()
+
+    return stream
 
 
 def _close(p, stream):
