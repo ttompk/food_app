@@ -5,6 +5,7 @@
 import pyaudio
 import wave
 import sys
+import io
 
 def AudioFile(resource_type, file_name, chunk = 1024):
     '''
@@ -63,15 +64,16 @@ def _play(p, file_name, chunk):
                     channels = wf.getnchannels(),
                     output = True)
     
-    """ Play entire file """
-    #data = wf.readframes(chunk)
-    #while data != '':
-    #    stream.write(data)
-    #    data = wf.readframes(chunk)
-
-    #wf = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
+    # read data
+    data = wf.readframes(chunk) 
+    
+    # play stream
+    while data:
+        stream.write(data)
+        data=wf.readframes(chunk)
     
     return stream
+
 
 def _record(p, file_name, chunk):
     ''' create record pyaudio object'''
