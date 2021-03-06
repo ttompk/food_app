@@ -18,6 +18,8 @@ def AudioFile(resource_type, file_name, chunk = 1024):
     depends:  pyaudio, sys
     returns:  none
     ''' 
+    RESPEAKER_INDEX = 1  # run getDeviceInfo.py to get index = input device id
+    
     try:
         resource_type = str(resource_type)
         file_name = str(file_name)
@@ -34,14 +36,14 @@ def AudioFile(resource_type, file_name, chunk = 1024):
 
     # perform either play or record then shutdown 
     if resource_type == 'play':
-        stream = _play(p, file_name, chunk)
+        stream = _play(p, file_name, chunk, RESPEAKER_INDEX)
     else:
-        stream = _record(p, file_name, chunk)
+        stream = _record(p, file_name, chunk, RESPEAKER_INDEX)
     # shutdown
     _close(p, stream)
 
 
-def _play(p, file_name, chunk):
+def _play(p, file_name, chunk, RESPEAKER_INDEX):
     ''' create playback pyaudio object
     input: 
         p:   pyaudio object. 
@@ -62,7 +64,8 @@ def _play(p, file_name, chunk):
                     rate = wf.getframerate(),
                     format = p.get_format_from_width(wf.getsampwidth()),
                     channels = wf.getnchannels(),
-                    output = True)
+                    output = True,
+                    output_device_index=RESPEAKER_INDEX)
     
     # read data
     data = wf.readframes(chunk) 
@@ -75,13 +78,12 @@ def _play(p, file_name, chunk):
     return stream
 
 
-def _record(p, file_name, chunk):
+def _record(p, file_name, chunk, RESPEAKER_INDEX):
     ''' create record pyaudio object'''
     # constants. Update as needed to match picovoice
     RESPEAKER_RATE = 16000
     RESPEAKER_CHANNELS = 2 
     RESPEAKER_WIDTH = 2
-    RESPEAKER_INDEX = 1  # run getDeviceInfo.py to get index = input device id
     RECORD_SECONDS = 5
     
     stream = p.open(
