@@ -1,5 +1,5 @@
 ### 
-# rhino template file
+# rhino dev file
 ###
 
 # initial code here: https://github.com/Picovoice/rhino  
