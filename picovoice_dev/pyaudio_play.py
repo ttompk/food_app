@@ -15,7 +15,9 @@ def record_file(wav_file='', nseconds=5, RESPEAKER_INDEX=1):
     if wav_file=='':
         wav_file = 'test_record.wav'
     # record sound
-    os.system(f'arecord -f S16_LE -d {nseconds} -r 16000 -Dhw:{RESPEAKER_INDEX} /tmp/{wav_file} -c 2')
+    print(" * Recording ... ")
+    os.system(f'arecord -f S16_LE -d {nseconds} -r 16000 -Dhw:{RESPEAKER_INDEX} ~/food_app/picovoice_dev/{wav_file} -c 2')
+    print(" * Recording Ended" )
 
 
 # this works but takes a long time to load
