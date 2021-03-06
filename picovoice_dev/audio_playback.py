@@ -1,8 +1,12 @@
-#from wave_func import AudioFile
+# audio_playback.py
+
+###
+# plays and records audio from command line
+###
+
 import os
 
 # NOTE: # run getDeviceInfo.py to get index = input device id
-
 
 def play_file(wav_file='', RESPEAKER_INDEX=1):
     if wav_file == '':
@@ -22,6 +26,7 @@ def record_file(wav_file='', nseconds=5, RESPEAKER_INDEX=1):
 
 # this works but takes a long time to load
 # makes a popping sound after file ran
+#from wave_func import AudioFile
 #AudioFile("play", "/home/pi/food_app/picovoice_dev/piano2.wav")
 
 if __name__=='__main__':
