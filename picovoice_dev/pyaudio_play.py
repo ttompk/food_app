@@ -5,7 +5,7 @@ import os
 
 
 def play_file(wav_file='', RESPEAKER_INDEX=1):
-    if wave_file == '':
+    if wav_file == '':
         wav_file = 'piano2.wav'
   
     # play the sound file using command line
