@@ -1,7 +1,7 @@
 # audio_playback.py
 
 ###
-# plays and records audio from command line
+# plays and records audio from command line on Pi Zero
 ###
 
 import os
