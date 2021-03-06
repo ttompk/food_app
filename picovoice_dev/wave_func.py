@@ -52,7 +52,7 @@ def _play(p, file_name, chunk):
     '''
     # open wave file
     try:
-        wf = wave.open(file, 'rb')
+        wf = wave.open(file_name, 'rb')
     except FileNotFoundError:
         print("File was not found.")
         sys.exit()
