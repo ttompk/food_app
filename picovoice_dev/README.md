@@ -56,7 +56,7 @@ https://app.assembla.com/wiki/show/portaudio/Platforms_RaspberryPi
 http://files.portaudio.com/download.html  
 
 
-## Picovoice  
+#### Picovoice   
 Picovoice has produced a demo especially designed for the 2-mic respeaker board. The demo flashes LED lights on the resepeaker board.  
 
 __Install picovoice demo:__  
@@ -65,6 +65,9 @@ __Install picovoice demo:__
 
 Running the above demo install will install both porcupine and rhino.    
 
+rhino_dev.py is a basic tempate for running rhino. There are default templates provided by picovoice '/contexts'.  
+
+ 
 
 
  
