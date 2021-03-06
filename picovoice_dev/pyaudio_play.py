@@ -24,7 +24,6 @@ def record_file(wav_file='', nseconds=5, RESPEAKER_INDEX=1):
 
 if __name__=='__main__':
     wav_file = input("File name (empty = default): ")
-    print(wav_file)
     resp = input("'play' or 'record: ")
     if resp == 'play':
         play_file(wav_file)
