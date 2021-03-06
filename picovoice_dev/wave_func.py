@@ -36,9 +36,9 @@ def AudioFile(resource_type, file_name, chunk = 1024):
     if resource_type == 'play':
         stream = _play(p, file_name, chunk)
     else:
-        stream = record(p, file_name, chunk)
+        stream = _record(p, file_name, chunk)
     # shutdown
-    close(p, stream)
+    _close(p, stream)
 
 
 def _play(p, file_name, chunk):
