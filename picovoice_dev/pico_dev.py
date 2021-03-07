@@ -48,4 +48,68 @@ class PicovoiceDemo(Thread):
                     print(f"    {slot} : {value}")
                 print('    }')
         print('}\n')
-        
+
+        if inference.is_understood:
+            if inference.intent == 'turnLights':  # replace this with setTimer
+                if inference.slots['state'] == 'off': 
+                    # run a function
+                    #default = self._set_color((0, 0, 0))
+                    pass
+                else: 
+                    # run another function
+                    #default = self._set_color(COLORS_RGB[self._color])
+                    pass
+            elif inference.intent == 'changeColor':
+                self._color = inference.slots['color']
+                self._set_color(COLORS_RGB[self._color])
+            else:
+                raise NotImplementedError()
+    
+    # This method runs after picovoicedemo object instantiation. 
+    def run(self):
+        pa = None
+        audio_stream = None
+
+        try:
+            pa = pyaudio.PyAudio()
+
+            # frame_length default = 512 
+            audio_stream = pa.open(
+                rate = self._picovoice.sample_rate,
+                channels = 1,
+                format = pyaudio.paInt16,
+                input = True,
+                frames_per_buffer=self._picovoice.frame_length)
+            
+            print(self._context)
+
+            print('[Listening ...]')
+
+            while True:
+                pcm = audio_stream.read(self._picovoice.frame_length)
+                pcm = struct.unpack_from("h" * self._picovoice.frame_length, pcm)
+
+                self._picovoice.process(pcm)
+            
+            except KeyboardInterrupt:
+                sys.stout.write('\b' * 2)
+                print("Stopping ...")
+            
+            finally:
+                if audio_stream is not None:
+                    audio_stream.close()
+
+                if pa is not None:
+                    pa.terminate()
+                
+                self._picovoice.delete()
+
+def main():
+    # instantiate PicovoiceDemo
+    o = PicovoiceDemo(
+        os.path.join(os.path.dirname(__file__), 'picovoice_raspberry-pi.ppn'),
+        os.path.join(os.path.dirname(__file__), 'respeaker_raspberry-pi.rhn'))
+    o.run()
+
+if __name__ == '__main__':
+    main()
