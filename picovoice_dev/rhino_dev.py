@@ -5,6 +5,7 @@
 # initial code here: https://github.com/Picovoice/rhino  
 
 import pvrhino
+import audio_playback as ap
 
 # set variables for context file: '/absolute/path/to/context'
 Path_To_Context = 'home/pi/food_app/picovoice_dev/context'  # default' 
@@ -25,7 +26,7 @@ while True:
         if not inference.is_understood:
             # add code to handle unsupported commands
             # play wav file saying: "I'm sorry, I didn't understand the command."
-            pass
+            ap.play('test_record.wav')  # defaults to food_app/picovoice/ dir
         else:
             intent = inference.intent
             slots = inference.slots

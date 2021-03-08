@@ -106,6 +106,8 @@ class PicovoiceDemo(Thread):
 
 def main():
     # instantiate PicovoiceDemo
+    # .ppn are porcupine - custom wake word how?
+    # .rhn is rhino - custom rhino via console - how to do locally? 
     o = PicovoiceDemo(
         os.path.join(os.path.dirname(__file__), 'picovoice_raspberry-pi.ppn'),
         os.path.join(os.path.dirname(__file__), 'respeaker_raspberry-pi.rhn'))
