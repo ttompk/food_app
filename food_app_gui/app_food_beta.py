@@ -30,6 +30,40 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.popup import Popup
 from kivy.clock import Clock
 
+# database 
+import sqlite3
+import datatime as dt
+# global databse variables
+DB_COLS_LIST, DB_VALS_LIST = [], [] 
+
+
+def sql_connect(sqlite_filename='foodDB.db'):
+    ''' conncect to sqlite database '''
+    # add auth as needed in future
+    print("connecting to db")
+    con = sqlite3.connect(sqlite_filename)
+    return con
+
+
+def sql_insert():
+    ''' insert row into sqlite database '''
+    # labels table columns: id, entry_time, entry_method, food_type, expire_date, pic, pred_food, prob_food
+    # NOTE: id should be autoincrementing
+    con = sql_connect()
+    cur = con.cursor()
+    print("Inserting into sql db.")
+    insert_string = ""
+    # add timestamp
+    DB_COLS_LIST.append('entry_time')
+    DB_VALS_LIST.append(str(dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+    insert_string = f"INSERT INTO labels ({','.join(db_cols_list)}) VALUES ({','.join(db_vals_list)})" 
+    cur.execute(insert_string)
+    con.commit()
+    con.close()
+    print("Connection closed.")
+    DB_COLS_LIST, DB_VALS_LIST = [], []  # clearing variables from the list
+    #return db_cols_list, db_vals_list
+
 
 class MainWindow(Screen):
     # First screen on launch
@@ -50,8 +84,13 @@ class MainWindow(Screen):
         x=ShowPopup()
 
     def user_input(self, main_val):
+        DB_VALS_LIST = []   # clear the global variables
         self.main_val = main_val.text
         print(self.main_val)
+        DB_COLS_LIST.append(self.main_val)
+        if self.main_val == "Today's Date":
+            sql_insert(db_cols_list, DB_COLS_LIST)
+
         App.get_running_app().user_select.append(self.main_val)
 
 
