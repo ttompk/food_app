@@ -51,7 +51,19 @@ Saving the food entries in a db. Using SQLite for now but ideally move to nosql 
 Install:  
 `sudo apt-get install sqlite3`  
 
-db name =  
+db name =  foodDB.db  
+path =     /home/pi/  
+
+Table: label  
+* id  integer  primary key  not null,
+* entry_time  text not null,  
+* entry_method  text  not null,  
+* food_type  text,  
+* expire_date  text,  
+* pic  blob,  
+* pred_food  text,  
+* prob_food  real  
+
 
 
 
