@@ -51,6 +51,8 @@ Saving the food entries in a db. Using SQLite for now but ideally move to nosql 
 Install:  
 `sudo apt-get install sqlite3`  
 
+__NOTE: database is a file in sqlite...be sure to add .db file to .gitignore.__  
+
 db name =  foodDB.db  
 path =     /home/pi/  
 
