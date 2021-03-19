@@ -45,6 +45,26 @@ Install picovoice demo:
 `picovoice_respeaker_demo`  
 
 
+### SQLite db
+Saving the food entries in a db. Using SQLite for now but ideally move to nosql document storage. Mongodb is not available for pi zero excpet for an older version that is may not be compatible. Will need to investigate the use of key-value pairs in SQLite.  
+
+Install:  
+`sudo apt-get install sqlite3`  
+
+db name =  foodDB.db  
+path =     /home/pi/  
+
+Table: label  
+* id  integer  primary key  not null,
+* entry_time  text not null,  
+* entry_method  text  not null,  
+* food_type  text,  
+* expire_date  text,  
+* pic  blob,  
+* pred_food  text,  
+* prob_food  real  
+
+
 
 
 
