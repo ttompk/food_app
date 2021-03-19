@@ -5,13 +5,21 @@ from threading import Thread
 import pyaudio
 from picovoice import Picovoice
 
+'''
+Picovoice engines require 16-bit 16kHz linearly-encoded PCM (single-channel) audio.
+'''
+
 class PicovoiceDemo(Thread):
+    '''
+    
+    '''
     def __init__(
             self,
             keyword_path,
             context_path,
             porcupine_sensitivity=0.75,
-            rhino_sensitivity=0.25):
+            rhino_sensitivity=0.25):  
+
         super(PicovoiceDemo, self).__init__()
 
         def inference_callback(inference):
@@ -106,11 +114,23 @@ class PicovoiceDemo(Thread):
 
 def main():
     # instantiate PicovoiceDemo
-    # .ppn are porcupine - custom wake word how?
-    # .rhn is rhino - custom rhino via console - how to do locally? 
+    # .ppn is porcupine wake words 
+    #       - how to make custom wake word?
+    # .rhn is rhino intent files - respeaker board came with .rhn file 
+    #       - make custom rhino via console 
+    #       - how to do locally? 
+    
+    # Select wake word file here: 
+    wake_file = os.path.join(os.path.dirname(__file__), 'picovoice_raspberry-pi.ppn')
+    
+    # Select rhino context file here:
+    #rhino_file = os.path.join(os.path.dirname(__file__), 'respeaker_raspberry-pi.rhn')
+    #rhino_file = os.path.join(os.path.dirname(__file__), 'contexts/alarm_raspberry-pi.rhn')
+    rhino_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'contexts/alarm_raspberry-pi.rhn')
+    
     o = PicovoiceDemo(
-        os.path.join(os.path.dirname(__file__), 'picovoice_raspberry-pi.ppn'),
-        os.path.join(os.path.dirname(__file__), 'respeaker_raspberry-pi.rhn'))
+        wake_file,
+        rhino_file)
     o.run()
 
 if __name__ == '__main__':
