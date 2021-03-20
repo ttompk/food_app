@@ -42,8 +42,8 @@ def sql_connect(sqlite_filename='foodDB.db'):
     ''' conncect to sqlite database '''
     # add auth as needed in future
     try:
-        print("connecting to db")
         con = sqlite3.connect(sqlite_filename)
+        print("connected to db")
         return con
     except:
         print("failed db connection.")
@@ -64,8 +64,9 @@ def sql_insert():
     
         # sqlite command string
         insert_string = f"INSERT INTO labels ({','.join(DB_DICT.keys())}) VALUES ({','.join(DB_DICT.values())})"
-        cur.execute(insert_string)
-        con.commit()
+        print(insert_string)  # dev only
+        #cur.execute(insert_string)
+        #con.commit()
         con.close()
         print("Connection closed.")  # for dev only
     except:
