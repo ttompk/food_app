@@ -33,37 +33,45 @@ from kivy.clock import Clock
 # database 
 import sqlite3
 import datatime as dt
-# global databse variables
-DB_COLS_LIST, DB_VALS_LIST = [], [] 
+ex
+# global database dictionary
+DB_DICT = {} 
 
 
 def sql_connect(sqlite_filename='foodDB.db'):
     ''' conncect to sqlite database '''
     # add auth as needed in future
-    print("connecting to db")
-    con = sqlite3.connect(sqlite_filename)
-    return con
+    try:
+        print("connecting to db")
+        con = sqlite3.connect(sqlite_filename)
+        return con
+    except:
+        print("failed db connection.")
 
 
 def sql_insert():
     ''' insert row into sqlite database '''
     # labels table columns: id, entry_time, entry_method, food_type, expire_date, pic, pred_food, prob_food
     # NOTE: id should be autoincrementing
-    con = sql_connect()
-    cur = con.cursor()
-    print("Inserting into sql db.")
-    insert_string = ""
-    # add timestamp
-    DB_COLS_LIST.append('entry_time')
-    DB_VALS_LIST.append(str(dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-    insert_string = f"INSERT INTO labels ({','.join(db_cols_list)}) VALUES ({','.join(db_vals_list)})" 
-    cur.execute(insert_string)
-    con.commit()
-    con.close()
-    print("Connection closed.")
-    DB_COLS_LIST, DB_VALS_LIST = [], []  # clearing variables from the list
-    #return db_cols_list, db_vals_list
-
+    try:
+        con = sql_connect()
+        cur = con.cursor()
+        print("Inserting into sql db.")  # for dev only
+        insert_string = ""               # clear out value
+    
+        # add timestamp
+        DB_DICT['entry_time'] = str(dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    
+        # sqlite command string
+        insert_string = f"INSERT INTO labels ({','.join(DB_DICT.keys())}) VALUES ({','.join(DB_DICT.values())})"
+        cur.execute(insert_string)
+        con.commit()
+        con.close()
+        print("Connection closed.")  # for dev only
+    except:
+        print("db entry failed.")
+    finally:
+        DB_DICT.clear()  # set variables from the dict to none
 
 class MainWindow(Screen):
     # First screen on launch
@@ -84,13 +92,18 @@ class MainWindow(Screen):
         x=ShowPopup()
 
     def user_input(self, main_val):
-        DB_VALS_LIST = []   # clear the global variables
+        # button pushed
         self.main_val = main_val.text
-        print(self.main_val)
-        DB_COLS_LIST.append(self.main_val)
-        if self.main_val == "Today's Date":
-            sql_insert(db_cols_list, DB_COLS_LIST)
+        print(self.main_val)  # for dev only
+        DB_DICT['label_type'] = self.main_val
 
+        # add entry method: gui vs vocal
+        DB_DICT['entry_method'] = 'gui'
+
+        # today's date label goes straight to database
+        if self.main_val in ["Print Today's Date", "Opened"]:
+            sql_insert()
+        
         App.get_running_app().user_select.append(self.main_val)
 
 
@@ -102,23 +115,27 @@ class DaysWindow(Screen):
 
     def btn_days(self, var_days):
         self.var_days = var_days
-        print(self.var_days)
+        print(self.var_days)  # for dev only
+        expire_date_val = ( dt.datetime.now() + timedelta(days=self.var_days)).strftime("%Y-%m-%d %H:%M:%S")
+        DB_DICT['expire_date'] = str(expire_date_val)
 
     def main_go_back(self):
         App.get_running_app().user_select[0]=""
+        DB_DICT['label_type'] = None
         #self.var_days = ""
-
 
 
 class FoodWindow(Screen):
     # Select food type
     def food_val_func(self, food_val):
         self.food_val = food_val.text
-        print(self.food_val)
+        print(self.food_val)  # for dev only
+        DB_DICT['food_type'] = self.food_val
 
     def days_go_back(self):
         App.get_running_app().user_select[1]=""
         self.var_food = ""
+        DB_DICT['expire_date'] = None
 
     def show_popup(self):
         x=ShowPopup()
