@@ -32,8 +32,8 @@ from kivy.clock import Clock
 
 # database 
 import sqlite3
-import datatime as dt
-ex
+import datetime as dt
+
 # global database dictionary
 DB_DICT = {} 
 
@@ -116,7 +116,7 @@ class DaysWindow(Screen):
     def btn_days(self, var_days):
         self.var_days = var_days
         print(self.var_days)  # for dev only
-        expire_date_val = ( dt.datetime.now() + timedelta(days=self.var_days)).strftime("%Y-%m-%d %H:%M:%S")
+        expire_date_val = ( dt.datetime.now() + dt.timedelta(days=int(self.var_days))).strftime("%Y-%m-%d %H:%M:%S")
         DB_DICT['expire_date'] = str(expire_date_val)
 
     def main_go_back(self):
