@@ -53,20 +53,16 @@ Install:
 
 __NOTE: database is a file in sqlite...be sure to add .db file to .gitignore.__  
 
-db name =  foodDB.db  
-path =     /home/pi/  
+db name =  `foodDB.db`  
+path =     `/home/pi/`  
 
-Table: label  
-* id  integer  primary key  not null,
-* entry_time  text not null,  
-* entry_method  text  not null,  
-* food_type  text,  
-* expire_date  text,  
-* pic  blob,  
-* pred_food  text,  
-* prob_food  real  
-
-
-
-
-
+Table: labels  
+* id, integer, primary key, not null  
+* entry_time, text, not null  
+* entry_method, text, not null   
+* label_type, text  
+* food_type, text  
+* expire_date, text  
+* pic, blob  
+* pred_food, text  
+* prob_food, real  

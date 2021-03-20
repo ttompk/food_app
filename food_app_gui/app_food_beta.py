@@ -33,10 +33,11 @@ from kivy.clock import Clock
 # database 
 import sqlite3
 import datetime as dt
+from collections import OrderedDict
 
 # global database dictionary
-DB_DICT = {} 
-
+DB_DICT = OrderedDict() 
+DB_TABLE = "labels"
 
 def sql_connect(sqlite_filename='foodDB.db'):
     ''' conncect to sqlite database '''
@@ -55,24 +56,35 @@ def sql_insert():
     # NOTE: id should be autoincrementing
     try:
         con = sql_connect()
-        cur = con.cursor()
+        curr = con.cursor()
         print("Inserting into sql db.")  # for dev only
         insert_string = ""               # clear out value
 
         # add timestamp
-        DB_DICT['entry_time'] = str(dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        #DB_DICT['entry_time'] = str(dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        #DB_DICT['id'] = None
 
         # sqlite command string
-        insert_string = f"INSERT INTO labels ({','.join(DB_DICT.keys())}) VALUES ({','.join(DB_DICT.values())})"
-        print(insert_string)  # dev only
-        #cur.execute(insert_string)
-        #con.commit()
-        con.close()
-        print("Connection closed.")  # for dev only
+        columns = ', '.join(DB_DICT.keys())
+        placeholders = ':'+', :'.join(DB_DICT.keys())
+        query = f"INSERT INTO {DB_TABLE} ({columns}) VALUES ({placeholders})"
+        print query
+
+        #insert_string = f"INSERT INTO labels ({','.join(DB_DICT.keys())}) VALUES ({','.join(DB_DICT.values())})"  
+        #print(insert_string)  # dev only
+        curr.execute(query, DB_DICT)
+        con.commit()
+        print("Data inserted..")  # for dev only
+        curr.close()
     except:
         print("db entry failed.")
     finally:
         DB_DICT.clear()  # set variables from the dict to none
+        print(DB_DICT)
+        if con:
+            con.close()
+            print("Connection Closed")
+
 
 class MainWindow(Screen):
     # First screen on launch
@@ -94,12 +106,16 @@ class MainWindow(Screen):
 
     def user_input(self, main_val):
         # button pushed
+        DB_DICT['entry_time'] = str(dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        # add entry method: gui vs vocal
+        DB_DICT['entry_method'] = 'gui'
+        # label type: [Opened, Today's Date, Expires]
         self.main_val = main_val.text
         print(self.main_val)  # for dev only
         DB_DICT['label_type'] = self.main_val
 
         # add entry method: gui vs vocal
-        DB_DICT['entry_method'] = 'gui'
+        #DB_DICT['entry_method'] = 'gui'
 
         # today's date label goes straight to database
         if self.main_val in ["Print Today's Date", "Opened"]:
