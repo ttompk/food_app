@@ -44,6 +44,7 @@ def sql_connect(sqlite_filename='foodDB.db'):
     try:
         print("connecting to db")
         con = sqlite3.connect(sqlite_filename)
+        print("connected to db")
         return con
     except:
         print("failed db connection.")
@@ -58,14 +59,15 @@ def sql_insert():
         cur = con.cursor()
         print("Inserting into sql db.")  # for dev only
         insert_string = ""               # clear out value
-    
+
         # add timestamp
         DB_DICT['entry_time'] = str(dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-    
+
         # sqlite command string
         insert_string = f"INSERT INTO labels ({','.join(DB_DICT.keys())}) VALUES ({','.join(DB_DICT.values())})"
-        cur.execute(insert_string)
-        con.commit()
+        print(insert_string)
+        #cur.execute(insert_string)
+        #con.commit()
         con.close()
         print("Connection closed.")  # for dev only
     except:
