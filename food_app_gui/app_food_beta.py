@@ -42,7 +42,6 @@ def sql_connect(sqlite_filename='foodDB.db'):
     ''' conncect to sqlite database '''
     # add auth as needed in future
     try:
-        print("connecting to db")
         con = sqlite3.connect(sqlite_filename)
         print("connected to db")
         return con
@@ -65,7 +64,7 @@ def sql_insert():
 
         # sqlite command string
         insert_string = f"INSERT INTO labels ({','.join(DB_DICT.keys())}) VALUES ({','.join(DB_DICT.values())})"
-        print(insert_string)
+        print(insert_string)  # dev only
         #cur.execute(insert_string)
         #con.commit()
         con.close()
@@ -105,7 +104,7 @@ class MainWindow(Screen):
         # today's date label goes straight to database
         if self.main_val in ["Print Today's Date", "Opened"]:
             sql_insert()
-        
+
         App.get_running_app().user_select.append(self.main_val)
 
 
