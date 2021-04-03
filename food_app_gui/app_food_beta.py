@@ -36,11 +36,19 @@ import datetime as dt
 from collections import OrderedDict
 
 # global database dictionary
-DB_DICT = OrderedDict() 
+DB_DB = "test_db"
 DB_TABLE = "labels"
+DB_DICT = OrderedDict() 
 
-def sql_connect(sqlite_filename='foodDB.db'):
-    ''' conncect to sqlite database '''
+# labels table columns: id, entry_time, entry_method, food_type, expire_date, pic, pred_food, prob_food
+# no-null = entry_time, entry_method, label_type (id = auto-increment)
+
+
+def sql_connect(sqlite_filename=DB_DB):
+    ''' conncect to sqlite database.
+    depends:  file must be in the same dir as this file. 
+    returns:  sqlite3 connection object
+    '''
     # add auth as needed in future
     try:
         con = sqlite3.connect(sqlite_filename)
@@ -52,30 +60,22 @@ def sql_connect(sqlite_filename='foodDB.db'):
 
 def sql_insert():
     ''' insert row into sqlite database '''
-    # labels table columns: id, entry_time, entry_method, food_type, expire_date, pic, pred_food, prob_food
     # NOTE: id should be autoincrementing
     try:
         con = sql_connect()
-        curr = con.cursor()
-        print("Inserting into sql db.")  # for dev only
-        insert_string = ""               # clear out value
+        cur = con.cursor()
 
-        # add timestamp
-        #DB_DICT['entry_time'] = str(dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-        #DB_DICT['id'] = None
+        # add timestamp for entry
+        DB_DICT['entry_time'] = str(dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
         # sqlite command string
         columns = ', '.join(DB_DICT.keys())
-        placeholders = ':'+', :'.join(DB_DICT.keys())
-        query = f"INSERT INTO {DB_TABLE} ({columns}) VALUES ({placeholders})"
-        print query
-
-        #insert_string = f"INSERT INTO labels ({','.join(DB_DICT.keys())}) VALUES ({','.join(DB_DICT.values())})"  
-        #print(insert_string)  # dev only
-        curr.execute(query, DB_DICT)
+        placeholders = ','.join(['?']*len(DB_DICT))
+        query = f'''INSERT INTO {DB_TABLE} ({columns}) VALUES ({placeholders})'''
+        cur.execute(query, DB_DICT)
         con.commit()
-        print("Data inserted..")  # for dev only
-        curr.close()
+        print("Data inserted.")
+        cur.close()
     except:
         print("db entry failed.")
     finally:
@@ -83,7 +83,7 @@ def sql_insert():
         print(DB_DICT)
         if con:
             con.close()
-            print("Connection Closed")
+            print("Connection closed.")
 
 
 class MainWindow(Screen):
@@ -106,18 +106,16 @@ class MainWindow(Screen):
 
     def user_input(self, main_val):
         # button pushed
-        DB_DICT['entry_time'] = str(dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-        # add entry method: gui vs vocal
+        
+        # add entry_method: [gui, vocal]
         DB_DICT['entry_method'] = 'gui'
-        # label type: [Opened, Today's Date, Expires]
+        
+        # add db value for label_type: [Opened, Today's Date, Expires]
         self.main_val = main_val.text
         print(self.main_val)  # for dev only
         DB_DICT['label_type'] = self.main_val
 
-        # add entry method: gui vs vocal
-        #DB_DICT['entry_method'] = 'gui'
-
-        # today's date label goes straight to database
+        # if button == 'Today's date' or 'Opened', add straight to database
         if self.main_val in ["Print Today's Date", "Opened"]:
             sql_insert()
 
